@@ -1,0 +1,145 @@
+/* ==========================================================
+   DESIGN TOKENS — the six required colours, used exactly.
+   #0B132B  deepest navy  -> app background, ink on paper
+   #1C2541  navy          -> sidebar / raised surfaces
+   #3A506B  slate blue    -> borders, muted text, hover
+   #5BC0DE  sky           -> focus rings, search highlight, links
+   #D97706  amber         -> the single action colour (FAB, active note)
+   #F4D6B0  parchment     -> the writing sheet
+   ========================================================== */
+:root {
+  --c-amber: #D97706;
+  --c-parchment: #F4D6B0;
+  --c-sky: #5BC0DE;
+  --c-slate: #3A506B;
+  --c-navy: #1C2541;
+  --c-deep: #0B132B;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--c-deep);
+  color: var(--c-parchment);
+  font-family: var(--sans);
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 1fr;
+  overflow: hidden;
+}
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--c-sky); outline-offset: 2px; }
+
+/* ---------- Sidebar: search + note summaries ---------- */
+.sidebar {
+  background: var(--c-navy);
+  border-right: 1px solid var(--c-slate);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.brand { padding: 1.5rem 1.5rem 0.75rem; }
+.brand h1 {
+  margin: 0; font-family: var(--serif); font-weight: 600;
+  font-size: 1.6rem; letter-spacing: .01em; color: var(--c-parchment);
+}
+.brand p { margin: .15rem 0 0; font-size: .85rem; color: var(--c-sky); }
+.search { padding: .5rem 1.5rem 1rem; }
+.search input {
+  width: 100%; padding: .65rem .9rem; border-radius: 999px;
+  background: var(--c-deep); border: 1px solid var(--c-slate);
+}
+.search input::placeholder { color: var(--c-slate); }
+.list { list-style: none; margin: 0; padding: 0 .75rem 6rem; overflow-y: auto; flex: 1; }
+.item {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: transparent; border: 1px solid transparent; border-radius: 10px;
+  padding: .8rem .9rem; margin-bottom: .25rem;
+}
+.item:hover { background: var(--c-deep); }
+.item[aria-current="true"] { background: var(--c-deep); border-color: var(--c-amber); }
+.item .t { font-family: var(--serif); font-size: 1.05rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .s { font-size: .85rem; color: #b9a98f; margin-top: .15rem;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item .d { font-size: .75rem; color: var(--c-slate); margin-top: .3rem;
+  filter: brightness(1.8); }
+mark { background: var(--c-sky); color: var(--c-deep); border-radius: 3px; padding: 0 2px; }
+.empty { padding: 1.5rem; color: #b9a98f; font-size: .95rem; line-height: 1.5; }
+
+/* ---------- Editor: the parchment sheet ---------- */
+.stage { padding: 1.5rem; min-height: 0; display: flex; }
+.sheet {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  background: var(--c-parchment); color: var(--c-deep);
+  border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  border-top: 5px solid var(--c-amber);
+}
+.bar {
+  display: flex; align-items: center; gap: .35rem; flex-wrap: wrap;
+  padding: .75rem 1.25rem; border-bottom: 1px solid rgba(58,80,107,.35);
+}
+.bar .sp { flex: 1; }
+.tool {
+  min-width: 2.25rem; height: 2.25rem; padding: 0 .6rem; cursor: pointer;
+  background: transparent; border: 1px solid transparent; border-radius: 8px;
+  color: var(--c-navy); font-family: var(--serif); font-size: 1rem;
+}
+.tool:hover { background: rgba(58,80,107,.15); }
+.tool[aria-pressed="true"] { background: var(--c-navy); color: var(--c-parchment); }
+.tool.danger { color: #8a3b00; font-family: var(--sans); font-size: .9rem; }
+.tool.back { display: none; }
+.status { font-size: .8rem; color: var(--c-slate); margin-right: .5rem; }
+.title {
+  border: 0; background: transparent; width: 100%;
+  padding: 1.5rem 2rem .5rem; color: var(--c-deep);
+  font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700;
+}
+.title::placeholder { color: rgba(58,80,107,.6); }
+.title:focus-visible, .body:focus-visible { outline-offset: -3px; border-radius: 8px; }
+.body {
+  flex: 1; overflow-y: auto; padding: .5rem 2rem 2rem;
+  font-family: var(--serif); font-size: 1.15rem; line-height: 1.7;
+  max-width: 72ch; width: 100%;
+}
+.body:empty::before { content: attr(data-placeholder); color: rgba(58,80,107,.6); }
+.body a { color: var(--c-navy); }
+.blank {
+  margin: auto; text-align: center; color: var(--c-navy);
+  font-family: var(--serif); padding: 2rem;
+}
+.blank h2 { margin: 0 0 .5rem; font-size: 1.6rem; }
+.blank p { margin: 0; color: var(--c-slate); }
+.hidden { display: none !important; }
+
+/* ---------- Floating action button ---------- */
+.fab {
+  position: fixed; left: calc(min(340px, 100vw) - 5.5rem); bottom: 1.5rem;
+  width: 3.75rem; height: 3.75rem; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--c-amber); color: var(--c-deep);
+  font-size: 2rem; line-height: 1; font-weight: 300;
+  box-shadow: 0 8px 22px rgba(217,119,6,.45), 0 2px 6px rgba(0,0,0,.5);
+  transition: transform .15s ease;
+}
+.fab:hover { transform: scale(1.06) rotate(90deg); }
+.fab:focus-visible { outline-color: var(--c-parchment); outline-offset: 3px; }
+
+/* ---------- Undo toast ---------- */
+.toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--c-navy); border: 1px solid var(--c-slate);
+  padding: .65rem 1rem; border-radius: 999px; display: flex; gap: 1rem; align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.5); z-index: 5;
+}
+.toast button { background: none; border: 0; color: var(--c-sky); cursor: pointer; font-weight: 600; }
+
+/* ---------- Responsive: below 760px show one pane at a time ---------- */
+@media (max-width: 760px) {
+  body { grid-template-columns: 1fr; }
+  .stage { display: none; padding: 0; }
+  body.editing .sidebar, body.editing .fab { display: none; }
+  body.editing .stage { display: flex; }
+  .sheet { border-radius: 0; }
+  .tool.back { display: inline-block; }
+  .title, .body { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .fab { left: auto; right: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) { .fab { transition: none; } .fab:hover { transform: none; } }
